@@ -3,10 +3,11 @@ let notificationShown = false;
 document.addEventListener('DOMContentLoaded', () => {
     async function fetchDataAndPopulate() {
         try {
-            const response = await fetch('https://starblast.dankdmitron.dev/api/simstatus.json');
-            const data = await response.json();
-
-            const savedModes = JSON.parse(localStorage.getItem('selectedModes')) || [true, false, false, false, false, false];
+            let savedModes = localStorage.getItem('selectedModes');
+            if (savedModes === 'undefined' || savedModes === null) {
+                savedModes = '[true, false, false, false, false, false]';
+            }
+            const selectedModes = JSON.parse(savedModes);
 
             const selectedRegion = localStorage.getItem('selectedRegion') || 'Europe';
             const selectedRegionElement = document.getElementById(selectedRegion);
@@ -14,12 +15,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectedRegionElement.checked = true;
             }
 
-            document.getElementById('teamMode').checked = savedModes[0];
-            document.getElementById('survivalMode').checked = savedModes[1];
-            document.getElementById('deathmatchMode').checked = savedModes[2];
-            document.getElementById('moddingMode').checked = savedModes[3];
-            document.getElementById('invasionMode').checked = savedModes[4];
-            document.getElementById('customMode').checked = savedModes[5];
+            document.getElementById('teamMode').checked = selectedModes[0];
+            document.getElementById('survivalMode').checked = selectedModes[1];
+            document.getElementById('deathmatchMode').checked = selectedModes[2];
+            document.getElementById('moddingMode').checked = selectedModes[3];
+            document.getElementById('invasionMode').checked = selectedModes[4];
+            document.getElementById('customMode').checked = selectedModes[5];
+
+            const response = await fetch('https://starblast.dankdmitron.dev/api/simstatus.json');
+            const data = await response.json();
 
             let systemsHTML = '';
             let systemsHTMLArray = [];
@@ -36,6 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
             let americaCount = 0;
             let europeCount = 0;
             let asiaCount = 0;
+
+            const seenSystems = new Map();
 
             data.forEach(location => {
                 const { location: region, address, systems } = location;
@@ -56,19 +62,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (region === selectedRegion) {
                     systems.forEach(system => {
-                        if (isSelectedMode(system.mode) && !(system.mode === 'survival' && system.time > 1800)) {
-                            systemsHTMLArray.push(`
-                                <div class="card system-card mb-3" onclick="fetchSystemDetails(${system.id}, '${system.name}', '${system.mode}', ${Math.round(system.time / 60)}, ${system.criminal_activity}, ${system.players}, '${region}', '${address}')">
-                                    <div class="card-body">
-                                        <h3 class="nunito-sans-bold mb-0">${system.name} <span class="float-end">${Math.round(system.time / 60)} min</span></h3>
-                                        <span>${modeIcons[system.mode]} <i>${system.mode.charAt(0).toUpperCase() + system.mode.slice(1)}</i> <b class="float-end">${system.players} players</b></span>
-                                    </div>
-                                </div>
-                            `);
+                        const systemKey = `${address}-${system.id}`;
+
+                        if (seenSystems.has(systemKey)) {
+                            if (system.time > seenSystems.get(systemKey).time) {
+                                seenSystems.set(systemKey, {...system, address, isDuplicate: true });
+                            }
+                        } else {
+                            seenSystems.set(systemKey, {...system, address, isDuplicate: false });
                         }
                     });
                 }
             });
+
+            seenSystems.forEach((system) => {
+                const displayMode = system.mode || system.actualMode || 'unknown';
+                const modeIcon = modeIcons[displayMode] || '';
+                const modeName = displayMode.charAt(0).toUpperCase() + displayMode.slice(1);
+
+                if (!system.isDuplicate && isSelectedMode(displayMode) && !(displayMode === 'survival' && system.time > 1800)) {
+                    systemsHTMLArray.push(`
+                        <div class="card system-card mb-3" onclick="fetchSystemDetails(${system.id}, '${system.name}', '${displayMode}', ${Math.round(system.time / 60)}, ${system.criminal_activity}, ${system.players}, '${selectedRegion}', '${system.address}')">
+                            <div class="card-body">
+                                <h3 class="nunito-sans-bold mb-0">${system.name} <span class="float-end">${Math.round(system.time / 60)} min</span></h3>
+                                <span>${modeIcon} <i>${modeName}</i> <b class="float-end">${system.players} players</b></span>
+                            </div>
+                        </div>
+                    `);
+                }
+            });
+
 
             systemsHTMLArray.sort((a, b) => {
                 const timeA = parseInt(a.match(/<span class="float-end">(\d+) min<\/span>/)[1]);
@@ -87,15 +110,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
             document.getElementById('systemsList').innerHTML = systemsHTML;
 
-            saveSelectedModes(savedModes);
+            saveSelectedModes(selectedModes);
 
         } catch (error) {
             console.error('Error fetching or parsing simstatus.json:', error);
         }
     }
 
-    function saveSelectedModes(savedModes) {
-        const modes = [
+    function isSelectedMode(mode) {
+        let savedModes = localStorage.getItem('selectedModes');
+        if (savedModes === 'undefined' || savedModes === null) {
+            savedModes = '[true, false, false, false, false, false]';
+        }
+        const selectedModes = JSON.parse(savedModes);
+
+        switch (mode) {
+            case 'team':
+                return selectedModes[0];
+            case 'survival':
+                return selectedModes[1];
+            case 'deathmatch':
+                return selectedModes[2];
+            case 'modding':
+                return selectedModes[3];
+            case 'invasion':
+                return selectedModes[4];
+            case 'custom':
+                return selectedModes[5];
+            default:
+                return false;
+        }
+    }
+
+    function saveSelectedModes() {
+        const selectedModes = [
             document.getElementById('teamMode').checked,
             document.getElementById('survivalMode').checked,
             document.getElementById('deathmatchMode').checked,
@@ -104,34 +152,16 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('customMode').checked
         ];
 
-        localStorage.setItem('selectedModes', JSON.stringify(modes));
+        localStorage.setItem('selectedModes', JSON.stringify(selectedModes));
     }
 
-    function isSelectedMode(mode) {
-        const teamMode = document.getElementById('teamMode').checked;
-        const survivalMode = document.getElementById('survivalMode').checked;
-        const deathmatchMode = document.getElementById('deathmatchMode').checked;
-        const moddingMode = document.getElementById('moddingMode').checked;
-        const invasionMode = document.getElementById('invasionMode').checked;
-        const customMode = document.getElementById('customMode').checked;
-
-        switch (mode) {
-            case 'team':
-                return teamMode;
-            case 'survival':
-                return survivalMode;
-            case 'deathmatch':
-                return deathmatchMode;
-            case 'modding':
-                return moddingMode;
-            case 'invasion':
-                return invasionMode;
-            case 'custom':
-                return customMode;
-            default:
-                return false;
-        }
-    }
+    const modeCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+    modeCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            saveSelectedModes();
+            fetchDataAndPopulate();
+        });
+    });
 
     fetchDataAndPopulate();
     handleNewServerAlert();
@@ -148,15 +178,6 @@ document.addEventListener('DOMContentLoaded', () => {
             fetchDataAndPopulate();
         });
     });
-
-    const modeCheckboxes = document.querySelectorAll('input[type="checkbox"]');
-    modeCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-            saveSelectedModes();
-            fetchDataAndPopulate();
-        });
-    });
-
 
     let darkTheme = function() {
         return "";
