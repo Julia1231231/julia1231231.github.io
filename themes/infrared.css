@@ -1,0 +1,177 @@
+/* Infrared by Halcyon#2789 */
+
+body {
+    background-image: url(../img/bckgrnd.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    overflow: hidden;
+}
+
+h3 {
+    color: #ff0000;
+    border-radius: 20px;
+    border-color: #aaa6ff;
+}
+
+h5 {
+    color: #ff0000;
+}
+
+.form-check-input {
+    background-color: rgb(97, 0, 16);
+}
+
+.form-check-input:checked {
+    background-color: red;
+    accent-color: red;
+    box-shadow: red;
+}
+
+.navbar-brand {
+    background-image: url(../img/newiconpng.png);
+    background-repeat: no-repeat;
+    width: 250px;
+    height: 80px;
+    text-indent: -999px;
+}
+
+.card {
+    margin-top: 10px;
+    background-color: rgba(0, 0, 0, 0.61);
+    border: 1.5px solid #0000;
+    transition-duration: 0.2s !important;
+    outline-style: solid;
+    outline-width: 1px;
+    outline-color: red;
+}
+
+.card:hover {
+    outline-width: 3px;
+    background-color: #000000cb;
+}
+
+b {
+    color: #990000;
+}
+
+i {
+    color: rgb(255, 80, 80);
+}
+
+#customSystemButton:hover i {
+    color: #0000;
+    background-color: #00000000;
+}
+
+#customSystemURLInput {
+    color: rgb(100, 0, 0);
+    backdrop-filter: brightness(0.8) blur(2px) saturate(1.1);
+    background-color: #00000000;
+    border-radius: 7.5px;
+    border: 1.5px solid rgb(100, 0, 0);
+    font-size: 10px;
+}
+
+#customSystemURLInput:input {
+    color: rgb(100, 0, 0);
+}
+
+#customGameShareButton {
+    display: none;
+    font-size: 1px;
+}
+
+label {
+    color: #ff0000;
+    font-weight: 700;
+}
+
+.modal-content {
+    background-color: #3b0000;
+}
+
+#systemsList::-webkit-scrollbar {
+    width: 5px;
+    background-color: rgba(255, 255, 255, 0);
+}
+
+.btn-danger {
+    color: #00000000;
+    background-color: #0000
+}
+
+footer {
+    color: rgb(90, 0, 0);
+    font-size: 1px;
+    display: none;
+}
+
+#systemReportCard {
+    outline-style: solid;
+    outline-width: 1px;
+    outline-color: red;
+}
+
+#systemReportPlayerList {
+    color: #FF0000;
+}
+
+#systemReportLink {
+    color: #ff0000;
+}
+
+#customThemeShow {
+    border-color: red;
+    border-width: 2px;
+    color: red;
+    transition-duration: 0.2s !important;
+}
+
+#customThemeShow:hover {
+    background-color: #00000067;
+    border-width: 3px;
+    border-color: rgb(255, 47, 47);
+    color: rgb(255, 47, 47);
+    font-weight: bold;
+}
+
+#settingsPanel {
+    background-color: #000000a4;
+}
+
+.text-center {
+    color: #FF0000;
+}
+
+.col-sm-2 {
+    color: rgb(255, 255, 255);
+}
+
+.w-10 {
+    border-color: #ff0000;
+    transition-duration: 0.15s !important;
+}
+
+.w-90 {
+    border-color: #ff0000;
+    transition-duration: 0.15s !important;
+}
+
+#customSystemButton {
+    border-color: #ff0000;
+}
+
+.w-10:hover {
+    border-color: #ff0000;
+    background-color: #ff000048;
+}
+
+.w-90:hover {
+    border-color: #ff0000;
+    background-color: #ff000044;
+    color: black;
+    font-weight: bold;
+}

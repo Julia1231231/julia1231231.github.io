@@ -1,0 +1,209 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&family=Rubik:wght@300;500&display=swap');
+:root {
+    --highlight-color: hsl(105, 66%, 49%);
+    --subheading-color: hsl(0, 0%, 96%);
+    --background-color: hsl(212, 32%, 8%);
+    --nav-background-color: hsl(212, 32%, 20%);
+    --text-color: hsl(236, 11%, 75%);
+    --heading-font: 'Rubik', sans-serif;
+    --text-font: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: var(--background-color);
+    font-family: var(--text-font);
+    color: var(--text-color);
+    /*font-family:var(--heading-font)*/
+}
+
+h3 {
+    color: var(--highlight-color);
+    border-radius: 15px;
+    border-color: #00000000;
+}
+
+a {
+    color: var(--text-color);
+}
+
+h5 {
+    color: var(--highlight-color);
+}
+
+.card {
+    background-color: #00000000;
+    border: 1.5px solid #0000;
+    transition-duration: 0.4s !important;
+}
+
+.card:hover {
+    border-radius: 5px;
+    backdrop-filter: brightness(0.8) blur(2px) saturate(1.1);
+    border: 1.5px solid #fff!important;
+    background-color: var(--nav-background-color);
+}
+
+b {
+    color: var(--highlight-color);
+}
+
+i {
+    color: var(--subheading-color);
+}
+
+input[type="checkbox"]:checked {
+    background-color: var(--highlight-color);
+    color: white;
+}
+
+input[type="checkbox"] {
+    background-color: var(--background-color);
+    border: 1px solid white;
+}
+
+#customSystemButton {
+    border-radius: 0px 7.5px 7.5px 0px;
+    border: 1.5px solid #fff;
+    border-left: none;
+    transition-duration: 300ms !important;
+}
+
+#customSystemButton:hover>i {
+    transform: rotate(30deg);
+}
+
+#customSystemURLInput {
+    color: var(--highlight-color);
+    background-color: #00000000;
+    border-radius: 7.5px;
+    border-radius: 7.5px 0px 0px 7.5px;
+    border: 1.5px solid #fff;
+    border-right: none;
+    font-size: 10px;
+}
+
+#customSystemURLInput:input {
+    color: var(--text-color);
+}
+
+#customSystemURLInput::placeholder {
+    color: var(--text-color);
+}
+
+#customGameShareButton {
+    display: none;
+    font-size: 1px;
+}
+
+label {
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.modal-content {
+    background-color: var(--nav-background-color);
+}
+
+#analysisRow {
+    color: var(--text-color);
+}
+
+#systemsList::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+
+#systemsList::-webkit-scrollbar {
+    width: 6px;
+}
+
+#systemsList::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #555;
+}
+
+#systemsList::-webkit-scrollbar-thumb:hover {
+    background-color: #f5f5f5;
+}
+
+.btn-danger {
+    color: #00000000;
+    background-color: #0000
+}
+
+footer {
+    color: gold;
+    font-size: 1px;
+    display: none;
+}
+
+#systemReportSystemName {
+    color: var(--highlight-color);
+}
+
+#systemReportPlayerList {
+    color: var(--text-color);
+}
+
+#systemReportLink {
+    color: var(--text-color);
+    ;
+}
+
+#systemReportLink:hover {}
+
+#systemCopyLink>i,
+#systemViewInfo>i {
+    color: var(--highlight-color);
+}
+
+#themeModalCloseButton {
+    color: var(--text-color);
+}
+
+.btn-group {
+    border: none;
+}
+
+.navbar-toggler {
+    color: white;
+}
+
+.text-center {
+    color: var(--text-color);
+}
+
+li {
+    color: var(--highlight-color);
+}
+
+.nav-item>a.nav-link {
+    color: var(--text-color);
+}
+
+li.nav-item>a.nav-link {
+    color: var(--text-color);
+}
+
+#navbarSupportedContent>ul>li:nth-child(2)>a {
+    color: var(--highlight-color);
+}
+
+#popover507324>div.popover-body {
+    color: var(--highlight-color);
+    background-color: #6679a4;
+}
+
+#systemReportCard>div>div {
+    color: var(--highlight-color);
+    border-color: none;
+}
+
+#navbarSupportedContent>ul>li:nth-child(3)>a>i {
+    color: var(--highlight-color);
+    transition-duration: 200ms !important;
+    transition-timing-function: cubic-bezier(.17, .69, .07, 1.03) !important;
+}
+
+#navbarSupportedContent>ul>li:nth-child(3)>a:hover>i {
+    transform: rotate(180deg);
+}

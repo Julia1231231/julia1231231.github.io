@@ -1,0 +1,48 @@
+body {
+    background-color: black !important;
+    color: #07ff23 !important;
+    font-family: "Consolas" !important;
+}
+
+b {
+    color: #07ff23 !important;
+}
+
+li.nav-item.ms-auto a.nav-link {
+    color: #07ff23 !important;
+}
+
+div.system-card {
+    background-color: black !important;
+    border: 1px solid #07ff23 !important;
+}
+
+:root {
+    color-scheme: dark !important;
+}
+
+#systemsList::-webkit-scrollbar {
+    width: 0.25vw !important;
+}
+
+#systemsList::-webkit-scrollbar-track {
+    background: black !important;
+}
+
+#systemsList::-webkit-scrollbar-thumb {
+    background-color: #07ff23 !important;
+    border-radius: 20px !important;
+    border: 3px solid #07ff23 !important;
+}
+
+.modal-content {
+    background-color: black !important
+}
+
+.btn-close {
+    filter: invert(1) !important;
+}
+
+a:hover {
+    color: lightgray !important;
+}

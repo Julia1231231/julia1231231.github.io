@@ -1,0 +1,189 @@
+/* Ultraviolet by Halcyon#2789 */
+
+body {
+    background-image: url(../img/background2.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    overflow: hidden;
+}
+
+h3 {
+    color: #5700FF;
+    border-radius: 20px;
+    border-color: #aaa6ff;
+}
+
+h5 {
+    color: #5700FF;
+}
+
+.form-check-input {
+    background-color: #2a007e;
+}
+
+.form-check-input:checked {
+    background-color: #5700FF;
+    accent-color: #5700FF;
+    box-shadow: #5700FF;
+}
+
+.navbar-brand {
+    background-image: url(../img/newicon2.png);
+    background-repeat: no-repeat;
+    width: 255px;
+    height: 78px;
+    text-indent: -999px;
+}
+
+.card {
+    margin-top: 10px;
+    background-color: rgba(0, 0, 0, 0.61);
+    border: 1.5px solid #0000;
+    transition-duration: 0.2s !important;
+    outline-style: solid;
+    outline-width: 1px;
+    outline-color: #5700ff;
+}
+
+.card:hover {
+    outline-width: 3px;
+    background-color: #000000cb;
+    border-color: #5700FF;
+}
+
+b {
+    color: #5700FF;
+}
+
+i {
+    color: #8548ff;
+}
+
+#customSystemButton:hover i {
+    color: #0000;
+    background-color: #00000000;
+}
+
+#customSystemURLInput {
+    color: #3e00bb;
+    backdrop-filter: brightness(0.8) blur(2px) saturate(1.1);
+    background-color: #00000000;
+    border-radius: 7.5px;
+    border: 1.5px solid #270075;
+    font-size: 10px;
+}
+
+#customSystemURLInput:input {
+    color: #3e00bb;
+}
+
+#customGameShareButton {
+    display: none;
+    font-size: 1px;
+}
+
+label {
+    color: #5700FF;
+    font-weight: 700;
+}
+
+.modal-content {
+    background-color: #230069;
+}
+
+#systemsList::-webkit-scrollbar {
+    width: 5px;
+    background-color: rgba(255, 255, 255, 0);
+}
+
+.btn-danger {
+    color: #00000000;
+    background-color: #0000
+}
+
+footer {
+    color: #1e005a;
+    font-size: 1px;
+    display: none;
+}
+
+#systemReportCard {
+    outline-style: solid;
+    outline-width: 1px;
+    outline-color: #5700FF;
+}
+
+#systemReportPlayerList {
+    color: #5700FF;
+}
+
+#systemReportLink {
+    color: #5700FF;
+}
+
+#customThemeShow {
+    border-color: #5700FF;
+    border-width: 2px;
+    color: #5700FF;
+    transition-duration: 0.2s !important;
+}
+
+#customThemeShow:hover {
+    background-color: #00000067;
+    border-width: 3px;
+    border-color: #5700FF;
+    color: #5700FF;
+    font-weight: bold;
+}
+
+#settingsPanel {
+    background-color: #000000a4;
+}
+
+.text-center {
+    color: #5700FF;
+}
+
+.col-sm-2 {
+    color: #ffffff;
+}
+
+#systemsList div.system-card:hover,
+#systemsList div.bg-dark.system-card:hover {
+    border: 1px solid #5700FF;
+    cursor: pointer;
+}
+
+#systemReportCard:hover,
+#systemReportCard.bg-dark:hover {
+    border: 1px solid #5700FF;
+}
+
+.w-10 {
+    border-color: #5700FF;
+    transition-duration: 0.15s !important;
+}
+
+.w-90 {
+    border-color: #5700FF;
+    transition-duration: 0.15s !important;
+}
+
+#customSystemButton {
+    border-color: #5700FF;
+}
+
+.w-10:hover {
+    border-color: #5700FF;
+    background-color: #5500ff5b;
+    color: #6f28ff;
+}
+
+.w-90:hover {
+    border-color: #5700FF;
+    background-color: #5500ff5b;
+    font-weight: bold;
+}

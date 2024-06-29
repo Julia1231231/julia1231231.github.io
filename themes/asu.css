@@ -1,0 +1,101 @@
+/* Serverlist V Asu theme
+   by apathy#3993 on discord */
+
+body {
+    background-image: url(https://raw.githubusercontent.com/apxthyy/icons/main/clean.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    font: "Roboto Mono";
+}
+
+h3 {
+    color: #23587a;
+    border-radius: 15px;
+    border-color: #00000000;
+}
+
+h5 {
+    color: #23587a;
+}
+
+.card {
+    background-color: #00000000;
+    border: 1.5px solid #0000;
+    transition-duration: 0.4s !important;
+}
+
+.card:hover {
+    border-radius: 5px;
+    backdrop-filter: brightness(0.8) blur(2px) saturate(1.1);
+    border: 1.5px solid #fff!important;
+}
+
+b {
+    color: gold;
+}
+
+i {
+    color: gold;
+}
+
+#customSystemButton:hover i {
+    color: #0000;
+    background-color: #00000000;
+}
+
+#customSystemURLInput {
+    color: gold;
+    backdrop-filter: brightness(0.8) blur(2px) saturate(1.1);
+    background-color: #00000000;
+    border-radius: 7.5px;
+    border: 1.5px solid #fff;
+    font-size: 10px;
+}
+
+#customSystemURLInput:input {
+    color: gold;
+}
+
+#customGameShareButton {
+    display: none;
+    font-size: 1px;
+}
+
+label {
+    color: #fff;
+    font-weight: 500;
+}
+
+.modal-content {
+    background-color: #23587a;
+}
+
+#systemsList::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+}
+
+.btn-danger {
+    color: #00000000;
+    background-color: #0000
+}
+
+footer {
+    color: gold;
+    font-size: 1px;
+    display: none;
+}
+
+#systemReportPlayerList {
+    color: gold;
+}
+
+#systemReportLink {
+    color: gold;
+}
+
+#systemReportLink:hover {
+    backdrop-filter: brightness(0.8) blur(2px) saturate(1.1);
+}

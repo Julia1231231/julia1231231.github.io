@@ -1,0 +1,251 @@
+/* Sunny - Halcyon#2789 */
+
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Glitch&display=swap');
+@keyframes backflip {
+    to {
+        background-position: 200% center;
+    }
+}
+
+body {
+    background-image: linear-gradient( -90deg, #f7797d 0%, #fbd786 25%, #f7797d 75%);
+    background-size: auto auto;
+    background-clip: border-box;
+    background-size: 200% auto;
+    font-family: 'Comfortaa', cursive;
+    width: 99%;
+    height: 100vh;
+    animation: backflip 7s linear infinite;
+    animation-direction: normal;
+    transition-duration: 0.15s !important;
+    overflow: hidden;
+    color: white;
+    text-shadow: white 0px 0px 3px;
+    margin: 5px;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+#settingsPanel {
+    background-color: rgb(0, 0, 0, 0.25);
+    padding: 20px;
+    border-radius: 4px;
+    height: calc(max-content+100px);
+    box-shadow: rgb(0, 0, 0, 0.30) 0px 0px 20px;
+    padding-left: 10px;
+    margin-top: 10px;
+    max-height: 20%;
+}
+
+#settingsPanel:hover {
+    background-color: rgb(0, 0, 0, 0.4);
+    transition-duration: 0.15s !important;
+}
+
+.btn {
+    color: white;
+    border: 1px solid white;
+}
+
+.btn:hover {
+    box-shadow: white 0px 0px 15px;
+}
+
+nav {
+    background-color: rgb(0, 0, 0, 0.4);
+}
+
+#systemReportPlayerList {
+    font-weight: 200;
+    letter-spacing: 1px;
+    margin-top: 10px;
+    padding-top: 20px;
+}
+
+.btn-group>button:hover {
+    box-shadow: white 0px 0px 15px;
+}
+
+.w-90:hover {
+    box-shadow: white 0px 0px 15px;
+    letter-spacing: 3px;
+    transition-duration: 0.15s !important;
+}
+
+.navbar-brand {
+    text-transform: uppercase;
+    color: white;
+    font-weight: 700;
+    font-style: italic;
+    letter-spacing: 5px;
+    margin-top: 5px;
+    text-indent: -9%;
+}
+
+.mb-3 {
+    -webkit-transform: scale(1, 1);
+    transform: scale(1, 1);
+    overflow: hidden;
+}
+
+.mb-3:active {
+    -webkit-animation: flippy 0.5s ease-in-out forwards;
+    animation: flippy 0.5s ease-in-out forwards;
+}
+
+.col-2::-webkit-scrollbar {
+    display: none;
+}
+
+@keyframes flippy {
+    from {
+        transform: scale(1, 1)
+    }
+    to {
+        transform: scale(1.05, 1.05)
+    }
+}
+
+.float-end {
+    font-weight: 300;
+}
+
+#useFullLinksPopover {
+    filter: invert(1)
+}
+
+.card-body>span {
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.navbar-brand>b {
+    color: white;
+    background-color: rgb(0, 0, 0, 0.25);
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: rgb(0, 0, 0, 0.3) 0px 0px 20px;
+    text-shadow: white 0px 0px 15px;
+    box-shadow: white 0px 0px 5px;
+    border: 2px solid white;
+}
+
+.btn-outline-success {
+    color: rgb(255, 255, 255);
+    border-color: rgb(255, 255, 255);
+}
+
+.btn-outline-success:hover {
+    background-color: #ffffff20;
+    border-color: rgb(255, 255, 255);
+    color: rgb(255, 255, 255)
+}
+
+.btn-outline-danger {
+    color: rgb(255, 255, 255);
+    border-color: rgb(255, 255, 255);
+}
+
+.btn-outline-danger:hover {
+    background-color: #ffffff30;
+    border-color: rgb(255, 255, 255);
+    color: rgb(255, 255, 255)
+}
+
+.btn-danger {
+    background-color: #f7797d;
+}
+
+.modal-content {
+    background-color: #f7797d;
+}
+
+.form-check-input:checked {
+    background-color: #f7797d;
+    border-color: #f7797d;
+}
+
+.bg-dark {
+    background-color: #f7797d;
+}
+
+.bg-dark:hover {
+    background-color: #f7797d90!;
+}
+
+.btn:focus {
+    outline-style: none;
+    box-shadow: none;
+}
+
+.card {
+    background-color: rgb(0, 0, 0, 0.25);
+    box-shadow: rgb(0, 0, 0, 0.3) 0px 0px 20px;
+    border: none;
+    margin-top: 15px;
+}
+
+.mb-0 {
+    letter-spacing: 5px;
+    text-transform: capitalize;
+}
+
+#systemReportCard>span>b {
+    font-weight: 600;
+    font-style: italic;
+}
+
+#systemReportCard:hover,
+#systemReportCard.bg-dark:hover {
+    border: 0px solid rgb(255, 0, 0);
+    background-color: rgb(0, 0, 0, 0.45);
+    box-shadow: rgb(0, 0, 0, 0.5) 0px 0px 20px;
+    transition-duration: 0.15s !important;
+}
+
+#criminalityPopover {
+    filter: invert(1);
+}
+
+#systemsList div.system-card:hover,
+#systemsList div.bg-dark.system-card:hover {
+    border: 0px solid white;
+    transition-duration: 0.15s !important;
+    cursor: pointer;
+    background-color: rgb(0, 0, 0, 0.45);
+    box-shadow: rgb(0, 0, 0, 0.5) 0px 0px 20px;
+}
+
+.mb-2 {
+    background-color: rgb(0, 0, 0, 0.25);
+    padding: 2px;
+    color: white;
+    box-shadow: rgb(0, 0, 0, 0.30) 0px 0px 20px;
+    border-radius: 4px;
+}
+
+.nav-item {
+    margin-top: 5px;
+    color: white;
+}
+
+.mb-2:hover {
+    background-color: rgb(0, 0, 0, 0.4);
+}
+
+.navbar-padding-top {
+    filter: invert(1);
+    text-shadow: black 0px 0px 5px;
+}
+
+.onhover-pointer {
+    color: white;
+}
+
+.bi-discord {
+    filter: invert(1);
+    text-shadow: black 0px 0px 1px;
+}

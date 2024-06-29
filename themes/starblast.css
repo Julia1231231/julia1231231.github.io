@@ -1,0 +1,7 @@
+@import url('https://bhpsngum.github.io/starblast/serverlistplus.css');
+
+/* Ship icon fix by dankdmitron */
+
+.ship-image {
+    filter: none;
+}

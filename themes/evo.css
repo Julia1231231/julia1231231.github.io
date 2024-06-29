@@ -1,0 +1,126 @@
+/* evo theme, dont judge
+by beansss#9355
+go touch grass sometime */
+
+body {
+    background-image: url(../img/image1.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    font: "Times New Roman";
+}
+
+
+/*
+  system name and time
+  */
+
+h3 {
+    color: #06cfa3;
+    border-radius: 20px;
+    border-color: #aaa6ff;
+}
+
+
+/*
+  region, mode, options label
+  */
+
+h5 {
+    color: #6390ff;
+}
+
+.card {
+    background-color: #0000;
+    border: 1.5px solid #0000;
+    transition-duration: 0.4s !important;
+}
+
+.card:hover {
+    border-radius: 5px;
+    backdrop-filter: brightness(0.8) blur(2px) saturate(1.1);
+    border: 1.5px solid #ccfff1!important;
+}
+
+
+/*
+  Serverlist V at top left, blank ecp count, # of players*/
+
+b {
+    color: #6390ff;
+}
+
+i {
+    color: gold;
+}
+
+#customSystemButton:hover i {
+    color: #0000;
+    background-color: #00000000;
+}
+
+#customSystemURLInput {
+    color: gold;
+    backdrop-filter: brightness(0.8) blur(2px) saturate(1.1);
+    background-color: #00000000;
+    border-radius: 7.5px;
+    border: 1.5px solid #fff;
+    font-size: 10px;
+}
+
+#customSystemURLInput:input {
+    color: gold;
+}
+
+#customGameShareButton {
+    display: none;
+    font-size: 1px;
+}
+
+
+/*
+  region, mode, options colors*/
+
+label {
+    color: #b44cc7;
+    font-weight: 700;
+}
+
+.modal-content {
+    background-color: #aaaaaa;
+}
+
+#systemsList::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+}
+
+.btn-danger {
+    color: #00000000;
+    background-color: #0000
+}
+
+footer {
+    color: yellow;
+    font-size: 1px;
+    display: none;
+}
+
+
+/*player list*/
+
+#systemReportPlayerList {
+    color: #083685;
+}
+
+
+/*join game button*/
+
+#systemReportLink {
+    color: #FF00ff;
+}
+
+#systemReportLink:hover {
+    backdrop-filter: brightness(0.8) blur(2px) saturate(1.1);
+}
