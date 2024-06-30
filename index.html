@@ -35,6 +35,23 @@
             </div>
         </div>
     </div>
+    <div class="modal" tabindex="-1" id="shareGameModal" data-nosnippet="" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content w-100">
+                <div class="modal-header">
+                    <h5 class="modal-title">Share Custom Game</h5>
+                    <button type="button" class="btn-close" id="shareGameModalCloseButton" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="customGameLinkInput" class="visually-hidden">Share Custom Game URL</label>
+                    <div class="input-group">
+                        <input type="text" id="customGameLinkInput" class="form-control-input" autocomplete="off" autocapitalize="off" placeholder="https://starblast.io/#1234@123.123.123.123">
+                        <button class="btn btn-danger" id="shareCustomGame"><i class="bi bi-arrow-bar-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="container" data-nosnippet="">
         <nav class="navbar navbar-expand-lg navbar-dark bg-transparent">
             <div class="container-fluid">
@@ -102,6 +119,9 @@
                     <input class="form-check-input" type="checkbox" value="" id="customMode">
                     <label class="form-check-label" for="customMode"><i class="bi bi-wrench"></i> Custom</label>
                 </div>
+                <button class="btn btn-sm btn-outline-danger w-100 mb-3" type="button" id="customGameShareButton" data-bs-toggle="modal" data-bs-target="#customGameModal">
+                    Share Custom Game
+                </button>
                 <!-- Notification Option -->
                 <h5 class="nunito-sans-bold">Options:</h5>
                 <div class="form-check">
@@ -165,7 +185,10 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="./other.js"></script>
+    <script src="./customGameShare.js"></script>
     <script src="./script.js"></script>
+    <script src="./themes.js"></script>
 </body>
 
 </html>

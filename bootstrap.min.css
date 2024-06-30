@@ -3457,6 +3457,14 @@ fieldset:disabled .btn {
     opacity: 0
 }
 
+.modal:not(.show) {
+    display: none
+}
+
+.modal.show {
+    display: block;
+}
+
 .collapse:not(.show) {
     display: none
 }
@@ -5372,7 +5380,7 @@ fieldset:disabled .btn {
 }
 
 .btn-close {
-    filter: invert;
+    filter: invert(1);
     box-sizing: content-box;
     width: 1em;
     height: 1em;
@@ -5464,6 +5472,8 @@ fieldset:disabled .btn {
 }
 
 .modal {
+    padding: 7%;
+    background-color: rgba(0, 0, 0, 0.66);
     position: fixed;
     top: 0;
     left: 0;
@@ -5474,6 +5484,14 @@ fieldset:disabled .btn {
     overflow-x: hidden;
     overflow-y: auto;
     outline: 0
+}
+
+.form-control-input[type=text] {
+    width: 94%;
+    background-color: #303030;
+    border-color: #fff;
+    border-top-left-radius: .2rem;
+    border-bottom-left-radius: .2rem;
 }
 
 .modal-dialog {

@@ -1,5 +1,13 @@
 let notificationShown = false;
 
+async function fetchJSON(url) {
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return response.json();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     async function fetchDataAndPopulate() {
         try {
@@ -8,8 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 savedModes = '[true, false, false, false, false, false]';
             }
             const selectedModes = JSON.parse(savedModes);
-
             const selectedRegion = localStorage.getItem('selectedRegion') || 'Europe';
+
             const selectedRegionElement = document.getElementById(selectedRegion);
             if (selectedRegionElement) {
                 selectedRegionElement.checked = true;
@@ -22,76 +30,82 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('invasionMode').checked = selectedModes[4];
             document.getElementById('customMode').checked = selectedModes[5];
 
-            const response = await fetch('https://starblast.dankdmitron.dev/api/simstatus.json');
+            const response = await fetch('https://starblast.io/simstatus.json');
             const data = await response.json();
 
-            let systemsHTML = '';
+            const uniqueServer = await findUniqueServers();
+
+            let mergedData = [];
+
+            if (uniqueServer) {
+                mergedData = [uniqueServer, ...data];
+            } else {
+                mergedData = [...data];
+            }
+
             let systemsHTMLArray = [];
-
-            const modeIcons = {
-                team: '<i class="bi bi-people-fill"></i>',
-                survival: '<i class="bi bi-bullseye"></i>',
-                deathmatch: '<i class="bi bi-trophy-fill"></i>',
-                modding: '<i class="bi bi-code-slash"></i>',
-                invasion: '<i class="bi bi-border"></i>',
-                custom: '<i class="bi bi-wrench"></i>'
-            };
-
             let americaCount = 0;
             let europeCount = 0;
             let asiaCount = 0;
 
             const seenSystems = new Map();
 
-            data.forEach(location => {
-                const { location: region, address, systems } = location;
+            mergedData.forEach(location => {
+                if (location && location.location) {
+                    const { location: region, address, systems } = location;
 
-                switch (region.toLowerCase()) {
-                    case 'america':
-                        americaCount += location.current_players;
-                        break;
-                    case 'europe':
-                        europeCount += location.current_players;
-                        break;
-                    case 'asia':
-                        asiaCount += location.current_players;
-                        break;
-                    default:
-                        break;
-                }
+                    switch (region.toLowerCase()) {
+                        case 'america':
+                            americaCount += location.current_players;
+                            break;
+                        case 'europe':
+                            europeCount += location.current_players;
+                            break;
+                        case 'asia':
+                            asiaCount += location.current_players;
+                            break;
+                        default:
+                            break;
+                    }
 
-                if (region === selectedRegion) {
-                    systems.forEach(system => {
-                        const systemKey = `${address}-${system.id}`;
+                    if (region === selectedRegion) {
+                        systems.forEach(system => {
+                            const systemKey = `${address}-${system.id}`;
 
-                        if (seenSystems.has(systemKey)) {
-                            if (system.time > seenSystems.get(systemKey).time) {
-                                seenSystems.set(systemKey, {...system, address, isDuplicate: true });
+                            if (seenSystems.has(systemKey)) {
+                                if (system.time > seenSystems.get(systemKey).time) {
+                                    seenSystems.set(systemKey, {...system, address, isDuplicate: true });
+                                }
+                            } else {
+                                seenSystems.set(systemKey, {...system, address, isDuplicate: false });
                             }
-                        } else {
-                            seenSystems.set(systemKey, {...system, address, isDuplicate: false });
-                        }
-                    });
+                        });
+                    }
+                } else {
+                    console.warn('Location object or its "location" property is undefined or null:', location);
                 }
             });
 
             seenSystems.forEach((system) => {
-                const displayMode = system.mode || system.actualMode || 'unknown';
-                const modeIcon = modeIcons[displayMode] || '';
+                let displayMode = system.mode || system.actualMode || 'unknown';
+                const modeIcon = getModeIcon(displayMode);
                 const modeName = displayMode.charAt(0).toUpperCase() + displayMode.slice(1);
+
+                if (modeName.startsWith('Сustom - ')) {
+                    displayMode = "custom";
+                }
 
                 if (!system.isDuplicate && isSelectedMode(displayMode) && !(displayMode === 'survival' && system.time > 1800)) {
                     systemsHTMLArray.push(`
-                        <div class="card system-card mb-3" onclick="fetchSystemDetails(${system.id}, '${system.name}', '${displayMode}', ${Math.round(system.time / 60)}, ${system.criminal_activity}, ${system.players}, '${selectedRegion}', '${system.address}')">
-                            <div class="card-body">
-                                <h3 class="nunito-sans-bold mb-0">${system.name} <span class="float-end">${Math.round(system.time / 60)} min</span></h3>
-                                <span>${modeIcon} <i>${modeName}</i> <b class="float-end">${system.players} players</b></span>
-                            </div>
+                    <div class="card system-card mb-3" onclick="fetchSystemDetails(${system.id}, '${system.name}', '${displayMode}', ${Math.round(system.time / 60)}, ${system.criminal_activity}, ${system.players}, '${selectedRegion}', '${system.address}')">
+                        <div class="card-body">
+                            <h3 class="nunito-sans-bold mb-0">${system.name} <span class="float-end">${Math.round(system.time / 60)} min</span></h3>
+                            <span>${modeIcon} <i>${modeName}</i> <b class="float-end">${system.players} players</b></span>
                         </div>
-                    `);
+                    </div>
+                `);
                 }
             });
-
 
             systemsHTMLArray.sort((a, b) => {
                 const timeA = parseInt(a.match(/<span class="float-end">(\d+) min<\/span>/)[1]);
@@ -99,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return timeA - timeB;
             });
 
-            systemsHTML = systemsHTMLArray.join('');
+            const systemsHTML = systemsHTMLArray.join('');
 
             document.getElementById('countAmerica').innerHTML = `<i class="bi bi-person-fill"></i> ${americaCount}`;
             document.getElementById('countEurope').innerHTML = `<i class="bi bi-person-fill"></i> ${europeCount}`;
@@ -115,6 +129,66 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Error fetching or parsing simstatus.json:', error);
         }
+    }
+
+    async function findUniqueServers() {
+        try {
+            const url1 = 'https://starblast.dankdmitron.dev/api/simstatus.json';
+            const url2 = 'https://starblast.io/simstatus.json';
+
+            const [data1, data2] = await Promise.all([fetchJSON(url1), fetchJSON(url2)]);
+
+            const extractSystems = (data) => {
+                return data.flatMap(server => server.systems.map(system => ({
+                    ...system,
+                    location: server.location,
+                    address: server.address
+                })));
+            };
+
+            const systems1 = extractSystems(data1);
+            const systems2 = extractSystems(data2);
+
+            const systems2Set = new Set(systems2.map(system => `${system.id}-${system.address}`));
+
+            const uniqueSystems = systems1.filter(system => !systems2Set.has(`${system.id}-${system.address}`));
+
+            if (uniqueSystems.length > 0) {
+                const uniqueServer = {
+                    location: uniqueSystems[0].location,
+                    address: uniqueSystems[0].address,
+                    current_players: uniqueSystems.reduce((total, system) => total + system.players, 0),
+                    systems: uniqueSystems,
+                    modding: uniqueSystems.some(system => system.mode === 'modding'),
+                    usage: data1.find(server => server.address === uniqueSystems[0].address).usage
+                };
+
+                uniqueServer.systems.forEach(system => {
+                    system.mode = `Сustom - ${system.mode.charAt(0).toUpperCase() + system.mode.slice(1)}`;
+                });
+
+                return uniqueServer;
+            } else {
+                return null;
+            }
+        } catch (error) {
+            console.error('Error fetching or processing data:', error);
+            return null;
+        }
+    }
+
+    findUniqueServers();
+
+    function getModeIcon(mode) {
+        const modeIcons = {
+            team: '<i class="bi bi-people-fill"></i>',
+            survival: '<i class="bi bi-bullseye"></i>',
+            deathmatch: '<i class="bi bi-trophy-fill"></i>',
+            modding: '<i class="bi bi-code-slash"></i>',
+            invasion: '<i class="bi bi-border"></i>',
+            custom: '<i class="bi bi-wrench"></i>'
+        };
+        return modeIcons[mode.toLowerCase()] || '';
     }
 
     function isSelectedMode(mode) {
@@ -163,13 +237,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    fetchDataAndPopulate();
-    handleNewServerAlert();
-
-    setInterval(() => {
-        fetchDataAndPopulate();
-        handleNewServerAlert();
-    }, 3000);
 
     const regionRadios = document.querySelectorAll('input[name="region"]');
     regionRadios.forEach(radio => {
@@ -179,268 +246,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    let darkTheme = function() {
-        return "";
-    }
+    fetchDataAndPopulate();
+    handleNewServerAlert();
 
-    let electricTheme = function() {
-        return "@import url('./themes/electric.css');";
-    }
+    setInterval(() => {
+        fetchDataAndPopulate();
+        handleNewServerAlert();
+    }, 3000);
 
-    let caramelBlueTheme = function() {
-        return "@import url('./themes/blue.css');";
-    }
-
-    let caramelPinkPurpleTheme = function() {
-        return "@import url('./themes/pink-purple.css');";
-    }
-
-    let caramelPurpleTheme = function() {
-        return "@import url('./themes/purple.css');";
-    }
-
-    let caramelCaramelTheme = function() {
-        return "@import url('./themes/caramel.css');";
-    }
-
-    let pixNeonTheme = function() {
-        return "@import url('./themes/neon.css');";
-    }
-
-    let bhpsngumStarblastTheme = function() {
-        return "@import url('./themes/starblast.css');";
-    }
-
-    let apathyAsuTheme = function() {
-        return "@import url('./themes/asu.css');"
-    }
-
-    let beansssEvoTheme = function() {
-        return "@import url('./themes/evo.css');"
-    }
-
-    let dank1337Theme = function() {
-        return "@import url('./themes/1337.css');"
-    }
-
-    let mardonMeteorTheme = function() {
-        return "@import url('./themes/meteor.css');"
-    }
-
-    let HalcyonSunnyTheme = function() {
-        return "@import url('./themes/sunny.css');"
-    }
-
-    let HalcyonInfraredTheme = function() {
-        return "@import url('./themes/infrared.css');"
-    }
-
-    let HalcyonUltravioletTheme = function() {
-        return "@import url('./themes/ultraviolet.css');"
-    }
-
-    let ApathyEpilogueTheme = function() {
-        return "@import url('./themes/epilogue.css');"
-    }
-
-    let customTheme = function() {
-        return window.localStorage.getItem("customTheme");
-    }
-
-    let themes = {
-        "Electric": electricTheme,
-        "Dark": darkTheme,
-        "1337": dank1337Theme,
-        "Blue by Caramel#8789": caramelBlueTheme,
-        "Pink-Purple by Caramel#8789": caramelPinkPurpleTheme,
-        "Purple by Caramel#8789": caramelPurpleTheme,
-        "Caramel by Caramel#8789": caramelCaramelTheme,
-        "Neon by Pix#7008": pixNeonTheme,
-        "Starblast by Bhpsngum#2623": bhpsngumStarblastTheme,
-        "Asu by apathy#3993": apathyAsuTheme,
-        "Lotus by Evo": beansssEvoTheme,
-        "Meteor by TheMardon#7986": mardonMeteorTheme,
-        "Sunny by Halcyon#2789": HalcyonSunnyTheme,
-        "Infrared by Halcyon#2789": HalcyonInfraredTheme,
-        "Ultraviolet by Halcyon#2789": HalcyonUltravioletTheme,
-        "Epilogue by apathy#3993": ApathyEpilogueTheme,
-        "Custom": customTheme
-    }
-
-    function applyThemeCSS(css) {
-        const styleElement = document.getElementById("customThemeStyle");
-        if (styleElement) {
-            styleElement.textContent = css;
-        } else {
-            const newStyleElement = document.createElement('style');
-            newStyleElement.id = "customThemeStyle";
-            newStyleElement.textContent = css;
-            document.head.appendChild(newStyleElement);
-        }
-    }
-
-    let selectedTheme = window.localStorage.getItem("selectedTheme");
-    if (!selectedTheme || selectedTheme === "") {
-        selectedTheme = "Electric";
-    }
-
-    window.localStorage.setItem("selectedTheme", selectedTheme);
-    applyThemeCSS(themes[selectedTheme]());
-
-    document.getElementById("themeSelect").value = selectedTheme;
-
-    let textarea = document.getElementById("themeEditor");
-    let editor = CodeMirror.fromTextArea(textarea, {
-        mode: "css"
-    });
-
-    let savedCSS = window.localStorage.getItem("customTheme");
-    if (!savedCSS || savedCSS === "") {
-        savedCSS = "// Enter CSS code here to be applied on every page load."
-    }
-
-    editor.setValue(savedCSS);
-    if (selectedTheme === "Custom") {
-        applyThemeCSS(savedCSS);
-    }
-
-    let modal = document.getElementById("customThemeModal");
-    modal.addEventListener("shown.bs.modal", () => {
-        editor.refresh();
-        editor.focus();
-        editor.setCursor(editor.lineCount(), 0);
-    })
-
-    editor.on("change", () => {
-        savedCSS = editor.getValue();
-        window.localStorage.setItem("customTheme", savedCSS);
-        if (selectedTheme === "Custom") {
-            applyThemeCSS(savedCSS);
-        }
-    });
-
-    function initializeThemeSelection() {
-        let selectedTheme = window.localStorage.getItem("selectedTheme") || "Electric";
-        document.getElementById("themeSelect").value = selectedTheme;
-        applyThemeCSS(themes[selectedTheme]());
-    }
-
-    document.getElementById("themeSelect").addEventListener("change", (event) => {
-        const selectedTheme = event.target.value;
-        window.localStorage.setItem("selectedTheme", selectedTheme);
-        applyThemeCSS(themes[selectedTheme]());
-    });
-
-    document.getElementById("customThemeShow").addEventListener("click", () => {
-        document.getElementById("customThemeModal").style.display = "block";
-    });
-
-    editor.setOption("theme", "darcula");
-    initializeThemeSelection()
-
-    document.getElementById("themeModalCloseButton").addEventListener("click", () => {
-        document.getElementById("customThemeModal").style.display = "none";
-    });
-
-    const clipboard = new ClipboardJS('#systemCopyLink', {
-        text: function(trigger) {
-            return document.getElementById('systemReportLink').href;
-        }
-    });
-
-    clipboard.on('success', function(e) {
-        const btn = e.trigger;
-        btn.setAttribute('data-bs-original-title', 'Copied!');
-        const tooltip = new bootstrap.Tooltip(btn);
-
-        setTimeout(() => tooltip.hide(), 2000);
-
-        e.clearSelection();
-    });
-
-    clipboard.on('error', function(e) {
-        console.error('Error copying link:', e.action);
-    });
-
-    document.getElementById("navbar-button").addEventListener("click", () => {
-        const content = document.getElementById('navbarSupportedContent');
-
-        if (content.classList.contains('show')) {
-            content.style.height = `${content.scrollHeight}px`;
-            content.classList.remove('show');
-            content.classList.add('collapsing');
-
-            setTimeout(() => {
-                content.style.height = '0';
-            }, 10);
-
-            setTimeout(() => {
-                content.classList.remove('collapsing');
-                content.style.display = 'none';
-            }, 350);
-        } else {
-            content.style.display = 'block';
-            content.classList.add('collapsing');
-
-            setTimeout(() => {
-                content.style.height = `${content.scrollHeight}px`;
-            }, 10);
-
-            setTimeout(() => {
-                content.classList.remove('collapsing');
-                content.classList.add('show');
-                content.style.height = 'auto';
-            }, 350);
-        }
-    });
-
-    function handleNewServerAlert() {
-        const systemsListElement = document.getElementById('systemsList');
-        const systemCards = systemsListElement.querySelectorAll('.system-card');
-
-        let foundNewServer = false;
-        systemCards.forEach(card => {
-            const timeText = card.querySelector('.float-end').textContent.trim();
-            const time = parseInt(timeText.split(' ')[0]);
-
-            if (time >= 0 && time <= 3) {
-                foundNewServer = true;
-            }
-        });
-
-        const newServerAlertCheckbox = document.getElementById('newServerAlert');
-
-        if (Notification.permission === 'denied') {
-            console.log('Notifications are blocked. Please enable them in your browser settings to receive alerts.');
-            return;
-        }
-
-        if (foundNewServer && newServerAlertCheckbox.checked && !notificationShown) {
-            if (Notification.permission !== 'granted') {
-                Notification.requestPermission().then(permission => {
-                    if (permission === 'granted') {
-                        createNotification();
-                        notificationShown = true;
-                        newServerAlertCheckbox.checked = false;
-                    }
-                });
-            } else {
-                createNotification();
-                notificationShown = true;
-                newServerAlertCheckbox.checked = false;
-            }
-        } else if (!foundNewServer || !newServerAlertCheckbox.checked) {
-            notificationShown = false;
-        }
-    }
-
-    function createNotification() {
-        const notification = new Notification("New server detected!", {
-            icon: "https://starblast.io/static/img/icon64.png"
-        });
-    }
-
-    document.getElementById('newServerAlert').addEventListener('change', handleNewServerAlert);
+    findUniqueServers();
 });
 
 async function fetchSystemDetails(id, name, mode, time, criminal, playerCount, region, address) {

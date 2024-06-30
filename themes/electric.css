@@ -174,7 +174,7 @@ sub {
 
 .btn-danger:hover {
     background-color: var(--text-color);
-    border-color: var(--background-color);
+    border-color: #fff;
     box-shadow: 0 0 15px var(--text-color);
 }
 
