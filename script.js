@@ -88,12 +88,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             seenSystems.forEach((system) => {
                 let displayMode = system.mode || system.actualMode || 'unknown';
-                const modeIcon = getModeIcon(displayMode);
                 const modeName = displayMode.charAt(0).toUpperCase() + displayMode.slice(1);
 
                 if (modeName.startsWith('Сustom - ')) {
                     displayMode = "custom";
                 }
+                const modeIcon = getModeIcon(displayMode);
 
                 if (!system.isDuplicate && isSelectedMode(displayMode) && !(displayMode === 'survival' && system.time > 1800)) {
                     systemsHTMLArray.push(`
@@ -180,16 +180,24 @@ document.addEventListener('DOMContentLoaded', () => {
     findUniqueServers();
 
     function getModeIcon(mode) {
+        // Check if mode starts with "custom" (case insensitive)
+        if (mode.trim().toLowerCase().startsWith("custom")) {
+            return '<i class="bi bi-wrench"></i>';
+        }
+
+        // Default mode icons for other cases
         const modeIcons = {
             team: '<i class="bi bi-people-fill"></i>',
             survival: '<i class="bi bi-bullseye"></i>',
             deathmatch: '<i class="bi bi-trophy-fill"></i>',
             modding: '<i class="bi bi-code-slash"></i>',
-            invasion: '<i class="bi bi-border"></i>',
-            custom: '<i class="bi bi-wrench"></i>'
+            invasion: '<i class="bi bi-border"></i>'
         };
-        return modeIcons[mode.toLowerCase()] || '';
+
+        // Return the corresponding icon or an empty string if mode is not found
+        return modeIcons[mode.trim().toLowerCase()] || '';
     }
+
 
     function isSelectedMode(mode) {
         let savedModes = localStorage.getItem('selectedModes');
