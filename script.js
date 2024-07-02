@@ -30,18 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('invasionMode').checked = selectedModes[4];
             document.getElementById('customMode').checked = selectedModes[5];
 
-            const response = await fetch('https://starblast.io/simstatus.json');
+            const response = await fetch('https://starblast.dankdmitron.dev/api/simstatus.json');
             const data = await response.json();
 
-            const uniqueServer = await findUniqueServers();
-
-            let mergedData = [];
-
-            if (uniqueServer) {
-                mergedData = [uniqueServer, ...data];
-            } else {
-                mergedData = [...data];
-            }
+            let mergedData = [...data];
 
             let systemsHTMLArray = [];
             let americaCount = 0;
@@ -70,6 +62,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     if (region === selectedRegion) {
                         systems.forEach(system => {
+                            if (system.unlisted === true) {
+                                system.mode = `Custom - ${system.mode.charAt(0).toUpperCase() + system.mode.slice(1)}`;
+                                console.log(system);
+                            }
+
                             const systemKey = `${address}-${system.id}`;
 
                             if (seenSystems.has(systemKey)) {
@@ -90,12 +87,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 let displayMode = system.mode || system.actualMode || 'unknown';
                 const modeName = displayMode.charAt(0).toUpperCase() + displayMode.slice(1);
 
-                if (modeName.startsWith('Сustom - ')) {
+                if (system.mode.startsWith('Custom - ')) {
                     displayMode = "custom";
                 }
                 const modeIcon = getModeIcon(displayMode);
 
-                if (!system.isDuplicate && isSelectedMode(displayMode) && !(displayMode === 'survival' && system.time > 1800)) {
+                if (!system.isDuplicate && isSelectedMode(displayMode) && !(system.survival === true)) {
                     systemsHTMLArray.push(`
                     <div class="card system-card mb-3" onclick="fetchSystemDetails(${system.id}, '${system.name}', '${displayMode}', ${Math.round(system.time / 60)}, ${system.criminal_activity}, ${system.players}, '${selectedRegion}', '${system.address}')">
                         <div class="card-body">
@@ -131,54 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function findUniqueServers() {
-        try {
-            const url1 = 'https://starblast.dankdmitron.dev/api/simstatus.json';
-            const url2 = 'https://starblast.io/simstatus.json';
-
-            const [data1, data2] = await Promise.all([fetchJSON(url1), fetchJSON(url2)]);
-
-            const extractSystems = (data) => {
-                return data.flatMap(server => server.systems.map(system => ({
-                    ...system,
-                    location: server.location,
-                    address: server.address
-                })));
-            };
-
-            const systems1 = extractSystems(data1);
-            const systems2 = extractSystems(data2);
-
-            const systems2Set = new Set(systems2.map(system => `${system.id}-${system.address}`));
-
-            const uniqueSystems = systems1.filter(system => !systems2Set.has(`${system.id}-${system.address}`));
-
-            if (uniqueSystems.length > 0) {
-                const uniqueServer = {
-                    location: uniqueSystems[0].location,
-                    address: uniqueSystems[0].address,
-                    current_players: uniqueSystems.reduce((total, system) => total + system.players, 0),
-                    systems: uniqueSystems,
-                    modding: uniqueSystems.some(system => system.mode === 'modding'),
-                    usage: data1.find(server => server.address === uniqueSystems[0].address).usage
-                };
-
-                uniqueServer.systems.forEach(system => {
-                    system.mode = `Сustom - ${system.mode.charAt(0).toUpperCase() + system.mode.slice(1)}`;
-                });
-
-                return uniqueServer;
-            } else {
-                return null;
-            }
-        } catch (error) {
-            console.error('Error fetching or processing data:', error);
-            return null;
-        }
-    }
-
-    findUniqueServers();
-
     function getModeIcon(mode) {
         // Check if mode starts with "custom" (case insensitive)
         if (mode.trim().toLowerCase().startsWith("custom")) {
@@ -197,7 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Return the corresponding icon or an empty string if mode is not found
         return modeIcons[mode.trim().toLowerCase()] || '';
     }
-
 
     function isSelectedMode(mode) {
         let savedModes = localStorage.getItem('selectedModes');
@@ -245,7 +193,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-
     const regionRadios = document.querySelectorAll('input[name="region"]');
     regionRadios.forEach(radio => {
         radio.addEventListener('change', () => {
@@ -260,9 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(() => {
         fetchDataAndPopulate();
         handleNewServerAlert();
-    }, 3000);
-
-    findUniqueServers();
+    }, 5000);
 });
 
 async function fetchSystemDetails(id, name, mode, time, criminal, playerCount, region, address) {
@@ -301,7 +246,6 @@ async function fetchSystemDetails(id, name, mode, time, criminal, playerCount, r
         updateSystemReport(name, mode, id, region, time, criminal, playerCount, 'Unknown', [], address);
     }
 }
-
 
 function updateSystemReport(systemName, mode, id, region, time, criminal, playerCount, ecpCount, playerNames, address) {
     document.getElementById('systemReportSystemName').textContent = systemName;
